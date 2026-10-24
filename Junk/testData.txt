@@ -1,0 +1,5 @@
+[name=Priya Verma, phone=+91 91234 56789, email=priya.verma88@example.com, password=tR7@bN4#wE9$]
+[name=Rohan Kulkarni, phone=+91 98112 23344, email=rohan.kulkarni@example.com, password=mK3!vY8^pL1*]
+[name=Ananya Iyer, phone=+91 97456 78901, email=ananya.iyer95@example.com, password=qZ6#dF2$uX5!]
+[name=Kabir Mehta, phone=+91 96543 21098, email=kabir.mehta@example.com, password=xW9%sA7&jH3#]
+[name=Sneha Patel, phone=+91 95012 34567, email=sneha.patel24@example.com, password=cL8$kE1*vB6^]
