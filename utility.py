@@ -6,7 +6,3 @@ class Utility:
                 return {"status": False, "result": f"Empty Value at {i}"}
 
         return {"status": True, "result": input_dict}
-
-
-# u1 = Utility()
-# print(u1.required_input({"name": "Kumar", "email": ""}))

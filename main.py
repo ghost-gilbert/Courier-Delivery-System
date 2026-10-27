@@ -20,5 +20,6 @@ class Dashboard:
             name = input("Enter your Name: ")
             phone = input("Enter your Phone No.: ")
 
+# Only for testing purpose
 d1 = Dashboard()
 d1.LoginMenu()
