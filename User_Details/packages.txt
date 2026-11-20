@@ -1,0 +1,4 @@
+[tracking_id=TRK0003,customer_id=CUST0002,type=Standard,weight=5.0,zone=Central,date=2026-11-19,status=Registered,agent=None,attempts=0,location=Warehouse,charge=100.00]
+[tracking_id=TRK0006,customer_id=CUST0005,type=Standard,weight=4.0,zone=Central,date=2026-11-19,status=Registered,agent=None,attempts=0,location=Warehouse,charge=90.00]
+[tracking_id=TRK0007,customer_id=CUST0005,type=Express,weight=6.0,zone=South,date=2026-11-19,status=Registered,agent=None,attempts=0,location=Warehouse,charge=260.00]
+[tracking_id=TRK0001,customer_id=CUST0001,type=Standard,weight=8.0,zone=North,date=2026-11-19,status=Delivered,agent=Agent_John,attempts=1,location=Delivered to customer,charge=130.00]

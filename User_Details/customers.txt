@@ -1,0 +1,4 @@
+[customer_id=2011026,name=Kumar Harsh,phone=9219147464]
+[customer_id=CUST0001,name=Mili,phone=8840479399]
+[customer_id=CUST0002,name=Mili,phone=9219147464]
+[customer_id=CUST0004,name=Mili,phone=9219147464]

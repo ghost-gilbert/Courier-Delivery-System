@@ -1,8 +1,7 @@
 class Utility:
     def required_input(self, input_dict):
-        for i in input_dict:
-            print(i)
-            if(input_dict[i].strip()=="" or input_dict[i]==None):
-                return {"status": False, "result": f"Empty Value at {i}"}
+        for key, value in input_dict.items():
+            if value is None or str(value).strip() == "":
+                return {"status": False, "result": f"Empty value at {key}"}
 
         return {"status": True, "result": input_dict}

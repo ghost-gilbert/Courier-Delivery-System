@@ -1,72 +1,111 @@
-# Basically i was trying to create CRUD operation for a txt file
+import os
+
 class FileHandling:
     def __init__(self, filepath):
         self.filepath = filepath
-        unq_id = 0
-        with open('User_Details/unique_id.txt', 'r') as file:
-            unq_id = file.read().split("=")[1].strip()
-        self.unq_id = unq_id
+        os.makedirs(os.path.dirname(self.filepath) or ".", exist_ok=True)
 
+        if not os.path.exists(self.filepath):
+            with open(self.filepath, "w") as file:
+                pass
 
-    # Reading txt file data
+        unq_path = "User_Details/unique_id.txt"
+        if not os.path.exists(unq_path):
+            with open(unq_path, "w") as file:
+                file.write("CUST=0\nTRK=0\n")
+
+    def generate_id(self, prefix="ID"):
+        unq_path = "User_Details/unique_id.txt"
+        counters = {}
+
+        if os.path.exists(unq_path):
+            with open(unq_path, "r") as file:
+                for line in file:
+                    if "=" in line:
+                        k, v = line.strip().split("=", 1)
+                        if v.isdigit():
+                            counters[k.strip()] = int(v.strip())
+
+        new_id = counters.get(prefix, 0) + 1
+        counters[prefix] = new_id
+
+        with open(unq_path, "w") as file:
+            for k, v in counters.items():
+                file.write(f"{k}={v}\n")
+
+        return f"{prefix}{new_id:04d}"
+
+    def _clean(self, value):
+        return str(value).replace(",", ";").replace("=", "-").replace("\n", " ").strip()
+
+    def _format_record(self, record_dict):
+        pairs = ",".join(f"{k}={self._clean(v)}" for k, v in record_dict.items())
+        return f"[{pairs}]"
+
+    def _save_all(self, records):
+        lines = [self._format_record(rec) for rec in records]
+        self.write_file("\n".join(lines) + ("\n" if lines else ""))
+
     def read_file(self):
         with open(self.filepath, "r") as file:
             return file.read()
 
-    def read_lines(self):
-        fileData = ""
-        with open(self.filepath, 'r') as file:
-            while True:
-                data = file.readline()
-                if(not data):
-                    break
-                fileData = fileData + data.strip() +"\n"
-        return fileData
-
-    # Appending raw data to file
     def append_data(self, data):
         with open(self.filepath, "a+") as file:
-            return file.write(data)
+            return file.write(data.strip() + "\n")
+
+    def add_record(self, record_dict):
+        return self.append_data(self._format_record(record_dict))
 
     def write_file(self, data):
         with open(self.filepath, "w") as file:
             return file.write(data)
-        
-    # Read
-    # Converting the data of txt file into a dictionary
+
     def parsed_dict(self):
-        rawData = self.read_file()
-        user_capsule = rawData.strip()
+        raw_data = self.read_file().strip()
+        if not raw_data:
+            return []
 
         main_list = []
+        for data_tup in raw_data.split("\n"):
+            line = data_tup.strip()
+            if not line or not (line.startswith("[") and line.endswith("]")):
+                continue
 
-        for data_tup in user_capsule.split("\n"):
             dict_version = {}
-            for raw_pairs_list in data_tup[1:-1].split(","):
-                (key, value) = raw_pairs_list.strip().split("=")
-                dict_version.update({key: value})
+            for raw_pair in line[1:-1].split(","):
+                if "=" in raw_pair:
+                    key, value = raw_pair.strip().split("=", 1)
+                    dict_version[key.strip()] = value.strip()
 
-            main_list.append(dict_version)
+            if dict_version:
+                main_list.append(dict_version)
 
         return main_list
 
-    # Fetch data related to a particular Users from the txt file 
     def findOne(self, key, value):
-        for user in self.parsed_dict():
-            if (user[key]==str(value)):
-                return user
+        for record in self.parsed_dict():
+            if record.get(key) == str(value):
+                return record
+        return None
 
-    # Delete
     def deleteOne(self, key, value):
-        combo = f"[{key}={value}"
-        data = self.read_lines()
-        start = data.find(combo)
-        newData = data[start:]
-        end = newData.find("\n")
-        newStr = data[0:start]+newData[end:].strip()
-        self.write_file(newStr)
+        records = self.parsed_dict()
+        updated = [rec for rec in records if rec.get(key) != str(value)]
+        if len(updated) == len(records):
+            return False
+        self._save_all(updated)
+        return True
 
-    # Update
-    def updateOne(self, key, value):
-        for user in self.parsed_dict():
-            pass
+    def updateOne(self, key, value, new_data):
+        records = self.parsed_dict()
+        updated_flag = False
+        for rec in records:
+            if rec.get(key) == str(value):
+                rec.update({k: self._clean(v) for k, v in new_data.items()})
+                updated_flag = True
+                break
+
+        if updated_flag:
+            self._save_all(records)
+        return updated_flag
